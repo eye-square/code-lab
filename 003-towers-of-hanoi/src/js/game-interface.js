@@ -23,6 +23,9 @@ const test = {
   numberofDisks: 3,
   solved: false,
 };
+test.rods.length; // 3
+test.rods[0].length; // 2
+test.rods[0][1].disk; // 1
 
 myGame.addListener((gameState) => {
 
