@@ -4,6 +4,9 @@ const myGame = window.createGame({ disks: 3 }); // create a new game with 3 disk
 
 console.log('initial state', myGame.getState());
 
-myGame.addListener((gameState) => {
+
+function weAreAListener(gameState) {
   console.log('gameState changed', gameState);
-});
+}
+
+myGame.addListener(weAreAListener);
