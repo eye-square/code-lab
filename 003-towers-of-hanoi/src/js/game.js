@@ -1,12 +1,7 @@
-
 window.createGame = function createGame(setup) {
   function createGameState() {
     const newState = {
-      rods: [
-        [],
-        [],
-        [],
-      ],
+      rods: [[], [], []],
       numberofDisks: setup.disks,
       solved: false,
     };
