@@ -7,7 +7,7 @@ window.createGame = function createGame(setup) {
     };
 
     for (let i = 0; i < setup.disks; i += 1) {
-      newState.rods[0][i] = { disk: i };
+      newState.rods[0].push({ disk: i });
     }
 
     return newState;
@@ -40,6 +40,7 @@ window.createGame = function createGame(setup) {
     if (state.rods[command.from].length === 0) {
       return false;
     }
+
     // test if disk is smaller than the target disk (game rule)
     const toRod = state.rods[command.to];
     if (toRod.length === 0) {
@@ -51,10 +52,25 @@ window.createGame = function createGame(setup) {
     const fromDisk = fromRod[fromRod.length - 1];
 
     // if(fromDisk smaller than toDisk) {
-    if (fromDisk.disk < toDisk.disk) {
+    if (fromDisk.disk > toDisk.disk) {
       return true;
     }
     return false;
+  }
+
+  function moveDisk(command) {
+    // 2. remove the disk from the origin rod
+    //      https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/pop
+    const disk = state.rods[command.from].pop();
+    // 3. add the disk to the top(end) of the new rod
+    //      https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
+    state.rods[command.to].push(disk);
+  }
+
+  function checkIfGameIsSolved() {
+    if (state.rods[2].length === state.numberofDisks) {
+      state.solved = true;
+    }
   }
 
   return {
@@ -62,17 +78,11 @@ window.createGame = function createGame(setup) {
     // returns true for valid move, false for invalid move
     move(command) {
       console.log(`moving disk from ${command.from} to ${command.to}`);
-      // TODO implement move
-      // 1. check if the command is valid
       if (commandIsValid(command)) {
         console.log('valid command');
-        // 2. remove the disk from the origin rod
-        //      https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/pop
-        // 3. add the disk to the top(end) of the new rod
-        //      https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
-        // 4. check if the game is solved and update the state if so
-        // 5. notifyListeners
-        // 6. return true/false depending if the move was valid or not
+        moveDisk(command);
+        checkIfGameIsSolved();
+        notifyListeners();
         return true;
       }
       console.log('invalid command');
