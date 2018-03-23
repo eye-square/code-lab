@@ -22,37 +22,26 @@ window.createGame = function createGame(setup) {
     }
   }
 
-  function commandIsValid(command) {
-    // { from: 1, to: 2 }
-    // test if game is solved
-    if (state.solved === true) {
-      return false;
-    }
-    // test if from rods exists
-    if (state.rods[command.from] === undefined) {
-      return false;
-    }
-    // test if to rod exists
-    if (state.rods[command.to] === undefined) {
-      return false;
-    }
-    // test if disk exists
-    if (state.rods[command.from].length === 0) {
+  function commandIsValid({ from, to }) {
+    const toRod = state.rods[to];
+    const fromRod = state.rods[from];
+
+    if (
+      state.solved === true || // test if game is solved
+      fromRod === undefined || // test if from rods exists
+      toRod === undefined || // test if to rod exists
+      fromRod.length === 0 // test if disk exists
+    ) {
       return false;
     }
 
     // test if disk is smaller than the target disk (game rule)
-    const toRod = state.rods[command.to];
     if (toRod.length === 0) {
       return true;
     }
 
-    const toDisk = toRod[toRod.length - 1];
-    const fromRod = state.rods[command.from];
-    const fromDisk = fromRod[fromRod.length - 1];
-
     // if(fromDisk smaller than toDisk) {
-    if (fromDisk.disk > toDisk.disk) {
+    if (fromRod[fromRod.length - 1].disk > toRod[toRod.length - 1].disk) {
       return true;
     }
     return false;
